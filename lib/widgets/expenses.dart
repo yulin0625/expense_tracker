@@ -31,6 +31,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true, // 讓 ModalBottomSheet 可以佔據所有高度
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
