@@ -43,6 +43,12 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +66,10 @@ class _ExpensesState extends State<Expenses> {
           const Text('The chart'),
           Expanded(
             // 因為外面是Column, 裡面是ListViewer, flutter會不知道List的寬度, 因此需用Expanded包住List
-            child: ExpensesList(expense: _registeredExpenses),
+            child: ExpensesList(
+              expense: _registeredExpenses,
+              onRemoveExpense: _removeExpense,
+            ),
           ),
         ],
       ),
