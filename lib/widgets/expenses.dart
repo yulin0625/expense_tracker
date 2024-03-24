@@ -44,13 +44,42 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    // 紀錄 expense 原本的位置
+    final expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
+
+    // 刪除多個 SnackBars 時用來馬上清除之前的 SnackBars
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense deleted.'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(
+                  expenseIndex, expense); // 用 insert 將 expense 插入回原本的地方
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent =
+        const Center(child: Text('No expenses found. Start adding some!'));
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expense: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -66,10 +95,7 @@ class _ExpensesState extends State<Expenses> {
           const Text('The chart'),
           Expanded(
             // 因為外面是Column, 裡面是ListViewer, flutter會不知道List的寬度, 因此需用Expanded包住List
-            child: ExpensesList(
-              expense: _registeredExpenses,
-              onRemoveExpense: _removeExpense,
-            ),
+            child: mainContent,
           ),
         ],
       ),
