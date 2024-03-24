@@ -35,7 +35,35 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  // 要使用 dispose 在沒有使用到 TextEditingController 時將記憶體釋放
+  /// 檢查是否有錯誤的輸入
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController
+        .text); // tryParse('Hello') => null, tryParse('1.12') => 1.12
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text(
+              'Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+  }
+
+  /// 在沒有使用到 TextEditingController 時要使用 dispose 將記憶體釋放
   @override
   void dispose() {
     _titleController.dispose();
@@ -120,10 +148,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                  print(_amountController.text);
-                },
+                onPressed: _submitExpenseData,
                 child: const Text('Save Expense'),
               ),
             ],
