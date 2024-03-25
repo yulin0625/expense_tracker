@@ -83,12 +83,13 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    final keyBoardSpace = MediaQuery.of(context).viewInsets.bottom; // 取得鍵盤占用的空間大小
+    // 取得鍵盤占用的空間大小
+    final keyBoardSpace = MediaQuery.of(context).viewInsets.bottom;
     return SizedBox(
-      height: double.infinity,  // 讓 modal 占用所有可用的高度
+      height: double.infinity, // 讓 modal 占用所有可用的高度
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 48, 16, keyBoardSpace + 16),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, keyBoardSpace + 16),
           child: Column(
             children: [
               TextField(

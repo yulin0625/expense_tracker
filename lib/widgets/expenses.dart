@@ -32,6 +32,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true, // 避開前鏡頭等相機設備
       isScrollControlled: true, // 讓 ModalBottomSheet 可以佔據所有高度
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
