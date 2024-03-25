@@ -72,6 +72,7 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     Widget mainContent =
         const Center(child: Text('No expenses found. Start adding some!'));
     if (_registeredExpenses.isNotEmpty) {
@@ -91,15 +92,22 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            // 因為外面是Column, 裡面是ListViewer, flutter會不知道List的寬度, 因此需用Expanded包住List
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  // 因為外面是Column, 裡面是ListViewer, flutter會不知道List的寬度, 因此需用Expanded包住List
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(children: [
+              Expanded(
+                child: Chart(expenses: _registeredExpenses),
+              ), // 因為 chart 的 width 為 infinity
+              Expanded(child: mainContent),
+            ]),
     );
   }
 }
